@@ -1,7 +1,5 @@
 sudo: false
 language: python
-virtualenv:
-  system_site_packages: true
 matrix:
   include:
     - python: 3.4
@@ -11,8 +9,8 @@ install:
   - source tests/travis_install.sh
   - pip install -r requirements.txt
 before_script:
-  - git config --global user.email "you@example.com"
-  - git config --global user.name "Your Name"
+  - git config --global user.email "support@travis-ci.com"
+  - git config --global user.name "Travis"
 script:
   - python setup.py test
 after_success:
