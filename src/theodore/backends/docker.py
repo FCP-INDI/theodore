@@ -158,8 +158,8 @@ class DockerSubjectSchedule(DockerSchedule):
             return subject, mapping
 
     def run(self):
-        config_folder = tempfile.mkdtemp()
-        output_folder = tempfile.mkdtemp()
+        config_folder = tempfile.mkdtemp(prefix="theo_")
+        output_folder = tempfile.mkdtemp(prefix="theo_")
 
         if self.pipeline is not None:
             new_pipeline = os.path.join(config_folder, 'pipeline.yml')
@@ -248,7 +248,7 @@ class DockerDataConfigSchedule(DockerSchedule):
 
         self._start = time.time()
 
-        self._output_folder = tempfile.mkdtemp()
+        self._output_folder = tempfile.mkdtemp(prefix="theo_")
 
         volumes = {
             self._output_folder: {'bind': '/output_folder', 'mode': 'rw'},
@@ -340,7 +340,7 @@ class DockerDataSettingsSchedule(DockerSchedule):
 
     def run(self):
         self._start = time.time()
-        self._output_folder = tempfile.mkdtemp(prefix='theo')
+        self._output_folder = tempfile.mkdtemp(prefix='theo_')
 
         volumes = {
             self._output_folder: {'bind': '/output_folder', 'mode': 'rw'},
@@ -366,13 +366,13 @@ class DockerDataSettingsSchedule(DockerSchedule):
             detach=True,
             working_dir='/output_folder',
             volumes=volumes
-        ))
+        )
 
         self._run.container.wait()
-        
+
         self._results['data_config'] = FileResult(
             'data_config',
-            glob.glob(os.path.join(self._output_folder, 'data_config*.yml'))[0],
+            glob.glob(os.path.join(self._output_folder, 'data_*.yml'))[0],
             'application/yaml'
         )
 

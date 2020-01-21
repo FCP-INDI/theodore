@@ -79,7 +79,7 @@ class ScheduleHandler(TheoBaseHandler):
             if not self.json_data.get("data_settings"):
                 return self.bad_request()
 
-            upload_folder = tempfile.mkdtemp()
+            upload_folder = tempfile.mkdtemp(prefix="theo_")
             data_settings_file = os.path.join(upload_folder, "data_settings.yml")
 
             with open(data_settings_file, "wb") as f:
@@ -101,7 +101,7 @@ class ScheduleHandler(TheoBaseHandler):
             if self.json_data["data_config"].startswith('s3://'):
                 data_config_file = self.json_data["data_config"]
             else:
-                upload_folder = tempfile.mkdtemp()
+                upload_folder = tempfile.mkdtemp(prefix="theo_")
                 data_config_file = os.path.join(upload_folder, "data_config.yml")
                 with open(data_config_file, "wb") as f:
                     f.write(self.json_data["data_config"].encode("utf-8"))
