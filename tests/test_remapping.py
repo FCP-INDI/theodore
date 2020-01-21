@@ -7,7 +7,7 @@ from theodore.backends import docker
 from theodore.scheduler import Scheduler
 
 def test_remap():
-    newdict, mapping = docker.DockerSchedule._remap_files({
+    newdict, mapping = docker.DockerSubjectSchedule._remap_files({
         'anat': '/fcp-indi/data/Projects/ADHD200/RawDataBIDS/KKI/sub-2014113/ses-1/anat/sub-2014113_ses-1_run-1_T1w.nii.gz',
         'func': {
             'rest_acq-2_run-1': {
