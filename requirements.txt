@@ -1,0 +1,2 @@
+pytest>=5.3.4
+pytest-remotedata>=0.3.2
