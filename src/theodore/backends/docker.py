@@ -6,6 +6,7 @@ import yaml
 import docker
 import shutil
 import tempfile
+import threading
 import hashlib
 import uuid
 import copy
@@ -39,6 +40,9 @@ class DockerRun(object):
 
     def __init__(self, container):
         self.container = container
+        self.done = threading.Event()
+        self.stats = threading.Thread(target=self._liveStats)
+        self.stats.start()
 
     @property
     def status(self):
@@ -60,6 +64,10 @@ class DockerRun(object):
             return status_map[status]
 
         return 'unknown'
+
+    def _liveStats(self):
+        while not self.done:
+            print(self.container.stats())
 
 
 class DockerSchedule(Schedule):
@@ -198,6 +206,7 @@ class DockerSubjectSchedule(DockerSchedule):
         ))
 
         self._run.container.wait()
+        self._run.done.set()
 
     @property
     def status(self):
@@ -282,6 +291,7 @@ class DockerDataConfigSchedule(DockerSchedule):
         ))
 
         self._run.container.wait()
+        self._run.done.set()
 
         try:
             files = glob.glob(os.path.join(self._output_folder, 'cpac_data_config_*.yml'))
@@ -366,9 +376,10 @@ class DockerDataSettingsSchedule(DockerSchedule):
             detach=True,
             working_dir='/output_folder',
             volumes=volumes
-        )
+        ))
 
         self._run.container.wait()
+        self._run.done.set()
 
         self._results['data_config'] = FileResult(
             'data_config',
