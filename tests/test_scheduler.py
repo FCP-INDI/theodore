@@ -29,4 +29,4 @@ def test_docker():
                 break
         time.sleep(1)
 
-    print(schedule.result())
+    print(schedule.results)
